@@ -1,9 +1,16 @@
 import { persisted } from './persist';
+import { repairArray } from './migrations';
 import { createStorage } from '$src/adapters/storage';
 import type { UnboundActivity, UnboundMeal } from '$src/domain/types';
 
-export const unboundActivities = persisted<UnboundActivity[]>(createStorage(), 'calcifer.unboundActivities', []);
-export const unboundMeals = persisted<UnboundMeal[]>(createStorage(), 'calcifer.unboundMeals', []);
+export const unboundActivities = persisted<UnboundActivity[]>(createStorage(), 'calcifer.unboundActivities', [], {
+  version: 2,
+  migrations: { 1: repairArray },
+});
+export const unboundMeals = persisted<UnboundMeal[]>(createStorage(), 'calcifer.unboundMeals', [], {
+  version: 2,
+  migrations: { 1: repairArray },
+});
 
 const titleKey = (title: string) => title.trim().toLowerCase();
 

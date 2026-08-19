@@ -1,9 +1,13 @@
 import { persisted } from './persist';
+import { macrosPerGramToPer100g } from './migrations';
 import { createStorage } from '$src/adapters/storage';
 import { emptyDayLog } from '$src/domain/daylog';
 import type { BoundActivity, BoundMeal, DayLog, DayLogs } from '$src/domain/types';
 
-export const dayLogs = persisted<DayLogs>(createStorage(), 'calcifer.dayLogs', {});
+export const dayLogs = persisted<DayLogs>(createStorage(), 'calcifer.dayLogs', {}, {
+  version: 2,
+  migrations: { 1: macrosPerGramToPer100g },
+});
 
 function updateDay(date: string, fn: (log: DayLog) => DayLog): void {
   dayLogs.update((logs) => ({ ...logs, [date]: fn(logs[date] ?? emptyDayLog()) }));
