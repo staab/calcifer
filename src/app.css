@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+
+:root {
+  --background: oklch(0.16 0.01 60);
+  --foreground: oklch(0.95 0.01 80);
+  --card: oklch(0.21 0.012 60);
+  --muted: oklch(0.28 0.012 60);
+  --muted-foreground: oklch(0.68 0.02 70);
+  --border: oklch(0.32 0.012 60);
+  --primary: oklch(0.6 0.21 27);
+  --primary-foreground: oklch(0.98 0.01 80);
+  --primary-over: oklch(0.78 0.11 27);
+  --calories: var(--primary);
+  --calories-over: var(--primary-over);
+  --carbs: oklch(0.78 0.15 75);
+  --carbs-over: oklch(0.89 0.08 75);
+  --fat: oklch(0.72 0.13 30);
+  --fat-over: oklch(0.85 0.07 30);
+  --protein: oklch(0.72 0.11 190);
+  --protein-over: oklch(0.85 0.06 190);
+  --destructive: oklch(0.55 0.21 27);
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-over: var(--primary-over);
+  --color-calories: var(--calories);
+  --color-calories-over: var(--calories-over);
+  --color-carbs: var(--carbs);
+  --color-carbs-over: var(--carbs-over);
+  --color-fat: var(--fat);
+  --color-fat-over: var(--fat-over);
+  --color-protein: var(--protein);
+  --color-protein-over: var(--protein-over);
+  --color-destructive: var(--destructive);
+  --radius-lg: var(--radius);
+  --radius-md: var(--radius-sm);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  color-scheme: dark;
+}
