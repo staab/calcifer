@@ -6,6 +6,7 @@
   import { llmConfig } from '$src/state/settings';
   import { caloriesFromMacros } from '$src/domain/energy';
   import type { Macros } from '$src/domain/types';
+  import ApiKeyBanner from '../ApiKeyBanner.svelte';
 
   let {
     onsubmit,
@@ -16,7 +17,7 @@
     ) => void;
   } = $props();
 
-  const llm = $derived(createLlm($llmConfig.braveApiKey));
+  const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   let title = $state('');
   let description = $state('');
   let texts = $state({ carbs: '', fat: '', protein: '' });
@@ -77,6 +78,7 @@
       </div>
     {/each}
   </div>
+  <ApiKeyBanner />
   <Button
     class="mt-1 w-full"
     disabled={!valid}

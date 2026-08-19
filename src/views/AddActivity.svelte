@@ -16,7 +16,7 @@
   import ActivityForm from '$src/views/add/ActivityForm.svelte';
   import AmountDialog from '$src/views/add/AmountDialog.svelte';
 
-  const llm = $derived(createLlm($llmConfig.braveApiKey));
+  const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   let showForm = $state(false);
   let dialogOpen = $state(false);
   let pending = $state<UnboundActivity>({ id: '', title: '', description: '', caloriesPerHour: 0, lastUsedAt: 0 });
@@ -77,7 +77,7 @@
   label="Minutes"
   unit="min"
   kcalPreview={(minutes) => activityCalories(pending.caloriesPerHour, minutes)}
-  estimateAmount={$llmConfig.braveApiKey
+  estimateAmount={$llmConfig.openrouterApiKey
     ? (estimate) => llm.estimateActivityMinutes(pending.title, pending.description, estimate)
     : undefined}
   onconfirm={confirm}

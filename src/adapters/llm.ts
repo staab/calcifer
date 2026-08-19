@@ -1,10 +1,9 @@
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
 import type { Macros } from '$src/domain/types';
 
-// in the browser, go through the vite proxy to sidestep CORS
-const ENDPOINT = Capacitor.isNativePlatform()
-  ? 'https://api.search.brave.com/res/v1/chat/completions'
-  : '/brave-api/res/v1/chat/completions';
+// OpenRouter accepts browser (CORS) calls, so no dev proxy is needed
+const ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
+const MODEL = 'google/gemini-3.7-flash';
 const TIMEOUT_MS = 10000;
 
 export interface ActivityEstimate {
@@ -23,9 +22,9 @@ export interface LlmAdapter {
   estimateMealGrams(title: string, description: string, estimate: string): Promise<number | null>;
 }
 
-// Brave may embed <citation>/<usage> tags in the answer text around the JSON
+// response_format requests strict JSON, but tolerate fences/prose just in case
 function extractJson(text: string): Record<string, unknown> | null {
-  const cleaned = text.replace(/<(citation|usage)>.*?<\/\1>/gs, '');
+  const cleaned = text.replace(/```(?:json)?/g, '');
   const start = cleaned.indexOf('{');
   const end = cleaned.lastIndexOf('}');
   if (start === -1 || end <= start) return null;
@@ -37,19 +36,36 @@ function extractJson(text: string): Record<string, unknown> | null {
   }
 }
 
-// Brave's chat completions endpoint accepts exactly one message, so
-// instructions and input are combined into a single user message
-async function chat(apiKey: string, instructions: string, input: string): Promise<Record<string, unknown> | null> {
+// every estimation returns a flat object of numbers, one field per answer
+function schema(fields: string[]): unknown {
+  return {
+    type: 'object',
+    properties: Object.fromEntries(fields.map((f) => [f, { type: 'number', description: f }])),
+    required: fields,
+    additionalProperties: false,
+  };
+}
+
+async function chat(
+  apiKey: string,
+  system: string,
+  input: string,
+  fields: string[]
+): Promise<Record<string, unknown> | null> {
   try {
     const res = await CapacitorHttp.post({
       url: ENDPOINT,
-      headers: { 'Content-Type': 'application/json', 'x-subscription-token': apiKey },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
       connectTimeout: TIMEOUT_MS,
       readTimeout: TIMEOUT_MS,
       data: {
-        model: 'brave',
+        model: MODEL,
         stream: false,
-        messages: [{ role: 'user', content: `${instructions}\n\n${input}` }],
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: input },
+        ],
+        response_format: { type: 'json_schema', json_schema: { name: 'estimate', strict: true, schema: schema(fields) } },
       },
     });
     if (res.status < 200 || res.status >= 300) return null;
@@ -70,8 +86,9 @@ export function createLlm(apiKey: string): LlmAdapter {
       if (apiKey === '') return null;
       const result = await chat(
         apiKey,
-        'You estimate calories burned by physical activities. Respond with ONLY a JSON object of the form {"caloriesPerHour": number} — the calories burned per hour by an average adult doing the described activity. No prose, no citations.',
-        `Activity: ${title}\nDescription: ${description}`
+        'You estimate calories burned per hour by an average adult doing a described physical activity.',
+        `Activity: ${title}\nDescription: ${description}`,
+        ['caloriesPerHour']
       );
       if (!result || !inRange(result.caloriesPerHour, 0, 3000)) return null;
       return { caloriesPerHour: result.caloriesPerHour };
@@ -80,8 +97,9 @@ export function createLlm(apiKey: string): LlmAdapter {
       if (apiKey === '') return null;
       const result = await chat(
         apiKey,
-        'You estimate the nutritional content of foods. Respond with ONLY a JSON object of the form {"servingGrams": number, "carbs": number, "fat": number, "protein": number}. servingGrams is the total weight in grams of the described portion; if no portion size is described, use a typical single serving. carbs, fat, and protein are the grams of each macronutrient contained in the full servingGrams of that portion. No prose, no citations.',
-        `Food: ${title}\nDescription: ${description}`
+        'You estimate the nutritional content of foods. servingGrams is the total weight in grams of the described portion; if no portion size is specified, default it to 100 grams. carbs, fat, and protein are the grams of each macronutrient contained in the full portion.',
+        `Food: ${title}\nDescription: ${description}`,
+        ['servingGrams', 'carbs', 'fat', 'protein']
       );
       if (!result) return null;
       const { servingGrams, carbs, fat, protein } = result;
@@ -99,8 +117,9 @@ export function createLlm(apiKey: string): LlmAdapter {
       if (apiKey === '') return null;
       const result = await chat(
         apiKey,
-        'You convert informal descriptions of how long an activity was performed into a duration. Respond with ONLY a JSON object of the form {"minutes": number} — the total minutes. No prose, no citations.',
-        `Activity: ${title}\nDescription: ${description}\nDuration described as: ${estimate}`
+        'You convert an informal description of how long an activity was performed into the total minutes.',
+        `Activity: ${title}\nDescription: ${description}\nDuration described as: ${estimate}`,
+        ['minutes']
       );
       if (!result || !inRange(result.minutes, 0, 1440)) return null;
       return result.minutes;
@@ -109,8 +128,9 @@ export function createLlm(apiKey: string): LlmAdapter {
       if (apiKey === '') return null;
       const result = await chat(
         apiKey,
-        'You convert informal portion descriptions into a weight. Respond with ONLY a JSON object of the form {"grams": number} — the total grams of the described food that was eaten. No prose, no citations.',
-        `Food: ${title}\nDescription: ${description}\nPortion described as: ${estimate}`
+        'You convert an informal portion of a described food into the total grams eaten.',
+        `Food: ${title}\nDescription: ${description}\nPortion described as: ${estimate}`,
+        ['grams']
       );
       if (!result || !inRange(result.grams, 0, 5000)) return null;
       return result.grams;

@@ -12,7 +12,7 @@
   import MealForm from '$src/views/add/MealForm.svelte';
   import AmountDialog from '$src/views/add/AmountDialog.svelte';
 
-  const llm = $derived(createLlm($llmConfig.braveApiKey));
+  const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   let showForm = $state(false);
   let dialogOpen = $state(false);
   let pending = $state<UnboundMeal>({
@@ -84,7 +84,7 @@
   unit="g"
   initialAmount={pendingGrams}
   kcalPreview={(grams) => mealCalories(pending.macrosPer100g, grams)}
-  estimateAmount={$llmConfig.braveApiKey
+  estimateAmount={$llmConfig.openrouterApiKey
     ? (estimate) => llm.estimateMealGrams(pending.title, pending.description, estimate)
     : undefined}
   onconfirm={confirm}

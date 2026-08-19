@@ -6,7 +6,7 @@
   import { todayKey, addDays, shortLabel } from '$lib/date';
   import { formatMacrosCompact } from '$lib/format';
   import { view, selectedDate, addMealSlot } from '$src/state/app';
-  import { settings, llmConfig } from '$src/state/settings';
+  import { settings } from '$src/state/settings';
   import { dayLogs, removeActivity, removeMeal } from '$src/state/log';
   import Button from '$lib/components/ui/Button.svelte';
   import DaySummary from './dashboard/DaySummary.svelte';
@@ -75,24 +75,6 @@
       </svg>
     </Button>
   </div>
-
-  {#if $llmConfig.braveApiKey === '' && !$llmConfig.bannerDismissed}
-    <div class="mb-3 flex items-center gap-2 rounded-lg border border-border bg-card p-3">
-      <button type="button" class="flex-1 text-left text-sm text-muted-foreground" onclick={() => view.set('settings')}>
-        Add a Brave LLM API key in Settings to auto-estimate calories and macros.
-      </button>
-      <button
-        type="button"
-        aria-label="Dismiss"
-        class="rounded-full p-1 text-muted-foreground active:text-foreground"
-        onclick={() => llmConfig.update((c) => ({ ...c, bannerDismissed: true }))}
-      >
-        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
-  {/if}
 
   <DaySummary {totals} {targets} />
 

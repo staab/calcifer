@@ -4,6 +4,7 @@
   import { debounce } from '$lib/utils';
   import { createLlm } from '$src/adapters/llm';
   import { llmConfig } from '$src/state/settings';
+  import ApiKeyBanner from '../ApiKeyBanner.svelte';
 
   let {
     onsubmit,
@@ -11,7 +12,7 @@
     onsubmit: (entry: { title: string; description: string; caloriesPerHour: number }) => void;
   } = $props();
 
-  const llm = $derived(createLlm($llmConfig.braveApiKey));
+  const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   let title = $state('');
   let description = $state('');
   let calText = $state('');
@@ -52,6 +53,7 @@
       }}
     />
   </div>
+  <ApiKeyBanner />
   <Button
     class="mt-1 w-full"
     disabled={!valid}

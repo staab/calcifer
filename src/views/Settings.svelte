@@ -14,10 +14,10 @@
   let adjustment = $state(String($settings.dailyKcalAdjustment));
   let activityLevel = $state<string>($settings.activityLevel);
   let goal = $state<string>($settings.goal);
-  let braveApiKey = $state($llmConfig.braveApiKey);
+  let apiKey = $state($llmConfig.openrouterApiKey);
 
   function commitApiKey(key: string) {
-    llmConfig.update((c) => ({ ...c, braveApiKey: key.trim() }));
+    llmConfig.update((c) => ({ ...c, openrouterApiKey: key.trim() }));
   }
 
   const activityOptions = [
@@ -148,18 +148,18 @@
 
   <Card>
     <h2 class="mb-3 text-sm font-semibold">AI estimates</h2>
-    <span class="mb-1 block text-xs text-muted-foreground">Brave LLM API key</span>
+    <span class="mb-1 block text-xs text-muted-foreground">OpenRouter API key</span>
     <Input
-      bind:value={braveApiKey}
+      bind:value={apiKey}
       type="password"
       placeholder="API key"
       clearable
-      oninput={() => commitApiKey(braveApiKey)}
+      oninput={() => commitApiKey(apiKey)}
       onclear={() => commitApiKey('')}
     />
     <p class="mt-2 text-xs text-muted-foreground">
       Used to auto-estimate calories and macros as you type. Get a key at
-      <a href="https://api-dashboard.search.brave.com" target="_blank" rel="noreferrer" class="underline">api-dashboard.search.brave.com</a>.
+      <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer" class="underline">openrouter.ai/keys</a>.
     </p>
   </Card>
 </div>
