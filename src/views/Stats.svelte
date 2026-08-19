@@ -25,10 +25,10 @@
   const avg = $derived(dailyAverage(points));
 
   const chartSeries = $derived([
-    { color: 'var(--calories)', points: points.map((p) => p.calories) },
-    { color: 'var(--carbs)', points: points.map((p) => p.carbs) },
-    { color: 'var(--fat)', points: points.map((p) => p.fat) },
-    { color: 'var(--protein)', points: points.map((p) => p.protein) },
+    { color: 'var(--calories)', points: points.map((p) => p.calories), axis: 'right' as const },
+    { color: 'var(--carbs)', points: points.map((p) => p.carbs), axis: 'left' as const },
+    { color: 'var(--fat)', points: points.map((p) => p.fat), axis: 'left' as const },
+    { color: 'var(--protein)', points: points.map((p) => p.protein), axis: 'left' as const },
   ]);
 
   const legend = [

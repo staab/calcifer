@@ -10,7 +10,7 @@
   let {
     onsubmit,
   }: {
-    onsubmit: (entry: { title: string; description: string; macrosPerGram: Macros }) => void;
+    onsubmit: (entry: { title: string; description: string; macrosPer100g: Macros }) => void;
   } = $props();
 
   const llm = $derived(createLlm($llmConfig.braveApiKey));
@@ -22,30 +22,30 @@
   let seq = 0;
 
   const macroKeys = ['carbs', 'fat', 'protein'] as const;
-  const labels = { carbs: 'Carbs g/g', fat: 'Fat g/g', protein: 'Protein g/g' };
+  const labels = { carbs: 'Carbs/100g', fat: 'Fat/100g', protein: 'Protein/100g' };
 
   const requestEstimate = debounce(async () => {
     if (title.trim() === '') return;
     const id = ++seq;
     estimating = true;
-    const est = await llm.estimateMealMacrosPerGram(title, description);
+    const est = await llm.estimateMealMacrosPer100g(title, description);
     if (id !== seq) return;
     estimating = false;
     if (!est) return;
     for (const key of macroKeys) {
-      if (!touched[key]) texts[key] = String(est.macrosPerGram[key]);
+      if (!touched[key]) texts[key] = String(est.macrosPer100g[key]);
     }
   }, 600);
 
-  const macrosPerGram = $derived({
+  const macrosPer100g = $derived({
     carbs: Number(texts.carbs) || 0,
     fat: Number(texts.fat) || 0,
     protein: Number(texts.protein) || 0,
   });
   const valid = $derived(
     title.trim() !== '' &&
-      macroKeys.every((k) => macrosPerGram[k] >= 0) &&
-      caloriesFromMacros(macrosPerGram) > 0
+      macroKeys.every((k) => macrosPer100g[k] >= 0) &&
+      caloriesFromMacros(macrosPer100g) > 0
   );
 </script>
 
@@ -75,7 +75,7 @@
   <Button
     class="mt-1 w-full"
     disabled={!valid}
-    onclick={() => onsubmit({ title: title.trim(), description, macrosPerGram })}
+    onclick={() => onsubmit({ title: title.trim(), description, macrosPer100g })}
   >
     Next
   </Button>

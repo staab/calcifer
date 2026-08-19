@@ -12,12 +12,14 @@ export interface ActivityEstimate {
 }
 
 export interface MealEstimate {
-  macrosPerGram: Macros;
+  macrosPer100g: Macros;
 }
 
 export interface LlmAdapter {
   estimateActivityCaloriesPerHour(title: string, description: string): Promise<ActivityEstimate | null>;
-  estimateMealMacrosPerGram(title: string, description: string): Promise<MealEstimate | null>;
+  estimateMealMacrosPer100g(title: string, description: string): Promise<MealEstimate | null>;
+  estimateActivityMinutes(title: string, description: string, estimate: string): Promise<number | null>;
+  estimateMealGrams(title: string, description: string, estimate: string): Promise<number | null>;
 }
 
 // Brave may embed <citation>/<usage> tags in the answer text around the JSON
@@ -73,17 +75,37 @@ export function createLlm(apiKey: string): LlmAdapter {
       if (!result || !inRange(result.caloriesPerHour, 0, 3000)) return null;
       return { caloriesPerHour: result.caloriesPerHour };
     },
-    async estimateMealMacrosPerGram(title, description) {
+    async estimateMealMacrosPer100g(title, description) {
       if (apiKey === '') return null;
       const result = await chat(
         apiKey,
-        'You estimate the macronutrient composition of foods. Respond with ONLY a JSON object of the form {"carbs": number, "fat": number, "protein": number} — grams of each macronutrient per 1 gram of the described food, each between 0 and 1. No prose, no citations.',
+        'You estimate the macronutrient composition of foods. Respond with ONLY a JSON object of the form {"carbs": number, "fat": number, "protein": number} — grams of each macronutrient per 100 grams of the described food, each between 0 and 100. No prose, no citations.',
         `Food: ${title}\nDescription: ${description}`
       );
       if (!result) return null;
       const { carbs, fat, protein } = result;
-      if (!inRange(carbs, 0, 1) || !inRange(fat, 0, 1) || !inRange(protein, 0, 1)) return null;
-      return { macrosPerGram: { carbs, fat, protein } };
+      if (!inRange(carbs, 0, 100) || !inRange(fat, 0, 100) || !inRange(protein, 0, 100)) return null;
+      return { macrosPer100g: { carbs, fat, protein } };
+    },
+    async estimateActivityMinutes(title, description, estimate) {
+      if (apiKey === '') return null;
+      const result = await chat(
+        apiKey,
+        'You convert informal descriptions of how long an activity was performed into a duration. Respond with ONLY a JSON object of the form {"minutes": number} — the total minutes. No prose, no citations.',
+        `Activity: ${title}\nDescription: ${description}\nDuration described as: ${estimate}`
+      );
+      if (!result || !inRange(result.minutes, 0, 1440)) return null;
+      return result.minutes;
+    },
+    async estimateMealGrams(title, description, estimate) {
+      if (apiKey === '') return null;
+      const result = await chat(
+        apiKey,
+        'You convert informal portion descriptions into a weight. Respond with ONLY a JSON object of the form {"grams": number} — the total grams of the described food that was eaten. No prose, no citations.',
+        `Food: ${title}\nDescription: ${description}\nPortion described as: ${estimate}`
+      );
+      if (!result || !inRange(result.grams, 0, 5000)) return null;
+      return result.grams;
     },
   };
 }

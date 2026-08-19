@@ -1,26 +1,41 @@
 <script lang="ts">
   import { view, selectedDate } from '$src/state/app';
-  import { dayLogs, addActivity } from '$src/state/log';
-  import { recentActivities, type RecentActivity } from '$src/domain/daylog';
+  import { addActivity } from '$src/state/log';
+  import {
+    unboundActivities,
+    saveUnboundActivity,
+    touchUnboundActivity,
+    removeUnboundActivity,
+  } from '$src/state/library';
   import { activityCalories } from '$src/domain/energy';
+  import { createLlm } from '$src/adapters/llm';
+  import { llmConfig } from '$src/state/settings';
+  import type { UnboundActivity } from '$src/domain/types';
   import Button from '$lib/components/ui/Button.svelte';
   import RecentList from '$src/views/add/RecentList.svelte';
   import ActivityForm from '$src/views/add/ActivityForm.svelte';
   import AmountDialog from '$src/views/add/AmountDialog.svelte';
 
+  const llm = $derived(createLlm($llmConfig.braveApiKey));
   let showForm = $state(false);
   let dialogOpen = $state(false);
-  let pending = $state<RecentActivity>({ title: '', description: '', caloriesPerHour: 0 });
+  let pending = $state<UnboundActivity>({ id: '', title: '', description: '', caloriesPerHour: 0, lastUsedAt: 0 });
 
-  const recents = $derived(recentActivities($dayLogs));
+  const recents = $derived($unboundActivities);
 
-  function pick(entry: RecentActivity) {
+  function pick(entry: UnboundActivity) {
     pending = entry;
     dialogOpen = true;
   }
 
   function confirm(minutes: number) {
-    addActivity($selectedDate, { ...pending, minutes });
+    addActivity($selectedDate, {
+      title: pending.title,
+      description: pending.description,
+      caloriesPerHour: pending.caloriesPerHour,
+      minutes,
+    });
+    touchUnboundActivity(pending.id);
     view.set('dashboard');
   }
 </script>
@@ -40,7 +55,7 @@
   </div>
 
   {#if showForm}
-    <ActivityForm onsubmit={pick} />
+    <ActivityForm onsubmit={(entry) => pick(saveUnboundActivity(entry))} />
   {:else}
     <RecentList
       addLabel="Add activity"
@@ -51,6 +66,7 @@
       }))}
       onadd={() => (showForm = true)}
       onselect={(i) => pick(recents[i])}
+      ondelete={(i) => removeUnboundActivity(recents[i].id)}
     />
   {/if}
 </div>
@@ -61,5 +77,8 @@
   label="Minutes"
   unit="min"
   kcalPreview={(minutes) => activityCalories(pending.caloriesPerHour, minutes)}
+  estimateAmount={$llmConfig.braveApiKey
+    ? (estimate) => llm.estimateActivityMinutes(pending.title, pending.description, estimate)
+    : undefined}
   onconfirm={confirm}
 />

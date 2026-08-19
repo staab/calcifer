@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fly } from 'svelte/transition';
   import { view } from '$src/state/app';
   import BottomNav from '$lib/components/BottomNav.svelte';
   import Dashboard from '$src/views/Dashboard.svelte';
@@ -12,17 +13,21 @@
 
 <div class="mx-auto flex min-h-dvh max-w-md flex-col">
   <main class={['flex-1', hasNav && 'pb-20']}>
-    {#if $view === 'dashboard'}
-      <Dashboard />
-    {:else if $view === 'add-activity'}
-      <AddActivity />
-    {:else if $view === 'add-meal'}
-      <AddMeal />
-    {:else if $view === 'stats'}
-      <Stats />
-    {:else if $view === 'settings'}
-      <Settings />
-    {/if}
+    {#key $view}
+      <div in:fly={{ y: 8, duration: 180 }}>
+        {#if $view === 'dashboard'}
+          <Dashboard />
+        {:else if $view === 'add-activity'}
+          <AddActivity />
+        {:else if $view === 'add-meal'}
+          <AddMeal />
+        {:else if $view === 'stats'}
+          <Stats />
+        {:else if $view === 'settings'}
+          <Settings />
+        {/if}
+      </div>
+    {/key}
   </main>
   {#if hasNav}
     <BottomNav />

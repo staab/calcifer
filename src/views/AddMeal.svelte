@@ -1,31 +1,44 @@
 <script lang="ts">
   import { view, selectedDate, addMealSlot } from '$src/state/app';
-  import { dayLogs, addMeal } from '$src/state/log';
-  import { recentMeals, type RecentMeal } from '$src/domain/daylog';
+  import { addMeal } from '$src/state/log';
+  import { unboundMeals, saveUnboundMeal, touchUnboundMeal, removeUnboundMeal } from '$src/state/library';
   import { mealCalories, mealMacros } from '$src/domain/energy';
+  import { createLlm } from '$src/adapters/llm';
+  import { llmConfig } from '$src/state/settings';
+  import type { UnboundMeal } from '$src/domain/types';
   import { formatMacrosCompact } from '$lib/format';
   import Button from '$lib/components/ui/Button.svelte';
   import RecentList from '$src/views/add/RecentList.svelte';
   import MealForm from '$src/views/add/MealForm.svelte';
   import AmountDialog from '$src/views/add/AmountDialog.svelte';
 
+  const llm = $derived(createLlm($llmConfig.braveApiKey));
   let showForm = $state(false);
   let dialogOpen = $state(false);
-  let pending = $state<RecentMeal>({
+  let pending = $state<UnboundMeal>({
+    id: '',
     title: '',
     description: '',
-    macrosPerGram: { carbs: 0, fat: 0, protein: 0 },
+    macrosPer100g: { carbs: 0, fat: 0, protein: 0 },
+    lastUsedAt: 0,
   });
 
-  const recents = $derived(recentMeals($dayLogs));
+  const recents = $derived($unboundMeals);
 
-  function pick(entry: RecentMeal) {
+  function pick(entry: UnboundMeal) {
     pending = entry;
     dialogOpen = true;
   }
 
   function confirm(grams: number) {
-    addMeal($selectedDate, { ...pending, grams, slot: $addMealSlot });
+    addMeal($selectedDate, {
+      title: pending.title,
+      description: pending.description,
+      macrosPer100g: pending.macrosPer100g,
+      grams,
+      slot: $addMealSlot,
+    });
+    touchUnboundMeal(pending.id);
     view.set('dashboard');
   }
 </script>
@@ -46,17 +59,18 @@
   </div>
 
   {#if showForm}
-    <MealForm onsubmit={pick} />
+    <MealForm onsubmit={(entry) => pick(saveUnboundMeal(entry))} />
   {:else}
     <RecentList
       addLabel="Add meal"
       items={recents.map((r) => ({
         title: r.title,
         description: r.description,
-        detail: `${formatMacrosCompact(mealMacros(r.macrosPerGram, 100))} / 100 g`,
+        detail: `${formatMacrosCompact(mealMacros(r.macrosPer100g, 100))} / 100 g`,
       }))}
       onadd={() => (showForm = true)}
       onselect={(i) => pick(recents[i])}
+      ondelete={(i) => removeUnboundMeal(recents[i].id)}
     />
   {/if}
 </div>
@@ -66,6 +80,9 @@
   title={pending.title}
   label="Grams"
   unit="g"
-  kcalPreview={(grams) => mealCalories(pending.macrosPerGram, grams)}
+  kcalPreview={(grams) => mealCalories(pending.macrosPer100g, grams)}
+  estimateAmount={$llmConfig.braveApiKey
+    ? (estimate) => llm.estimateMealGrams(pending.title, pending.description, estimate)
+    : undefined}
   onconfirm={confirm}
 />

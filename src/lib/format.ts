@@ -1,7 +1,7 @@
 import type { Macros } from '$src/domain/types';
 
 export function formatMacrosCompact(m: Macros): string {
-  return `${Math.round(m.carbs)} c, ${Math.round(m.fat)} f, ${Math.round(m.protein)} p`;
+  return `${Math.round(m.carbs)}c ${Math.round(m.fat)}f ${Math.round(m.protein)}p`;
 }
 
 export function formatMinutes(minutes: number): string {

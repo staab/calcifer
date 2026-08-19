@@ -32,12 +32,13 @@ export function activityCalories(caloriesPerHour: number, minutes: number): numb
   return Math.round((caloriesPerHour * minutes) / 60);
 }
 
-export function mealMacros(macrosPerGram: Macros, grams: number): Macros {
+export function mealMacros(macrosPer100g: Macros, grams: number): Macros {
   const dp1 = (n: number) => Math.round(n * 10) / 10;
+  const portions = grams / 100;
   return {
-    carbs: dp1(macrosPerGram.carbs * grams),
-    fat: dp1(macrosPerGram.fat * grams),
-    protein: dp1(macrosPerGram.protein * grams),
+    carbs: dp1(macrosPer100g.carbs * portions),
+    fat: dp1(macrosPer100g.fat * portions),
+    protein: dp1(macrosPer100g.protein * portions),
   };
 }
 
@@ -45,8 +46,8 @@ export function caloriesFromMacros(m: Macros): number {
   return KCAL_PER_GRAM.carbs * m.carbs + KCAL_PER_GRAM.fat * m.fat + KCAL_PER_GRAM.protein * m.protein;
 }
 
-export function mealCalories(macrosPerGram: Macros, grams: number): number {
-  return Math.round(caloriesFromMacros(mealMacros(macrosPerGram, grams)));
+export function mealCalories(macrosPer100g: Macros, grams: number): number {
+  return Math.round(caloriesFromMacros(mealMacros(macrosPer100g, grams)));
 }
 
 export function rebalanceSplit(split: MacroSplit, changed: keyof MacroSplit, value: number): MacroSplit {

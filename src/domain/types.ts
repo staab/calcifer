@@ -8,7 +8,24 @@ export interface Macros {
   protein: number;
 }
 
-export interface Activity {
+export interface UnboundActivity {
+  id: string;
+  title: string;
+  description: string;
+  caloriesPerHour: number;
+  lastUsedAt: number;
+}
+
+export interface UnboundMeal {
+  id: string;
+  title: string;
+  description: string;
+  macrosPer100g: Macros;
+  lastUsedAt: number;
+}
+
+// bound entries snapshot their unbound source, so deleting either never affects the other
+export interface BoundActivity {
   id: string;
   title: string;
   description: string;
@@ -17,19 +34,19 @@ export interface Activity {
   loggedAt: number;
 }
 
-export interface Meal {
+export interface BoundMeal {
   id: string;
   title: string;
   description: string;
-  macrosPerGram: Macros;
+  macrosPer100g: Macros;
   grams: number;
   slot: MealSlot;
   loggedAt: number;
 }
 
 export interface DayLog {
-  activities: Activity[];
-  meals: Meal[];
+  activities: BoundActivity[];
+  meals: BoundMeal[];
 }
 
 export type DayLogs = Record<string, DayLog>;

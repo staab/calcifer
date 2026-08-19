@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade, scale } from 'svelte/transition';
   import type { Snippet } from 'svelte';
 
   let {
@@ -24,12 +25,14 @@
       type="button"
       aria-label="Close"
       class="absolute inset-0 bg-black/60"
+      transition:fade={{ duration: 150 }}
       onclick={() => (open = false)}
     ></button>
     <div
       class="relative w-full max-w-sm rounded-xl border border-border bg-card p-5 shadow-xl"
       role="dialog"
       aria-modal="true"
+      transition:scale={{ start: 0.95, duration: 150 }}
     >
       {#if title}
         <h2 class="mb-3 text-lg font-semibold">{title}</h2>

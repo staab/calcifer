@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Activity, Meal } from '$src/domain/types';
+  import type { BoundActivity, BoundMeal } from '$src/domain/types';
   import { activityCalories, mealCalories, mealMacros } from '$src/domain/energy';
   import { formatMinutes, formatMacrosCompact } from '$lib/format';
   import Card from '$lib/components/ui/Card.svelte';
@@ -16,7 +16,7 @@
   }: {
     title: string;
     kind: 'activity' | 'meal';
-    items: (Activity | Meal)[];
+    items: (BoundActivity | BoundMeal)[];
     summary?: string[];
     onadd: () => void;
     ondelete: (id: string) => void;
@@ -35,14 +35,14 @@
         ? {
             id: item.id,
             title: item.title,
-            subtitle: formatMinutes((item as Activity).minutes),
-            kcal: activityCalories((item as Activity).caloriesPerHour, (item as Activity).minutes),
+            subtitle: formatMinutes((item as BoundActivity).minutes),
+            kcal: activityCalories((item as BoundActivity).caloriesPerHour, (item as BoundActivity).minutes),
           }
         : {
             id: item.id,
             title: item.title,
-            subtitle: formatMacrosCompact(mealMacros((item as Meal).macrosPerGram, (item as Meal).grams)),
-            kcal: mealCalories((item as Meal).macrosPerGram, (item as Meal).grams),
+            subtitle: formatMacrosCompact(mealMacros((item as BoundMeal).macrosPer100g, (item as BoundMeal).grams)),
+            kcal: mealCalories((item as BoundMeal).macrosPer100g, (item as BoundMeal).grams),
           }
     )
   );

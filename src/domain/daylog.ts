@@ -1,4 +1,4 @@
-import type { DayLog, DayLogs, Macros, Meal, MealSlot } from './types';
+import type { BoundMeal, DayLog, DayLogs, Macros, MealSlot } from './types';
 import { activityCalories, mealCalories, mealMacros } from './energy';
 import { addDays, lastNDays } from '$lib/date';
 
@@ -16,8 +16,8 @@ export function dayTotals(log: DayLog): DayTotals {
   const macros: Macros = { carbs: 0, fat: 0, protein: 0 };
   let consumed = 0;
   for (const meal of log.meals) {
-    consumed += mealCalories(meal.macrosPerGram, meal.grams);
-    const m = mealMacros(meal.macrosPerGram, meal.grams);
+    consumed += mealCalories(meal.macrosPer100g, meal.grams);
+    const m = mealMacros(meal.macrosPer100g, meal.grams);
     macros.carbs += m.carbs;
     macros.fat += m.fat;
     macros.protein += m.protein;
@@ -26,18 +26,18 @@ export function dayTotals(log: DayLog): DayTotals {
   return { consumed, burned, macros };
 }
 
-export function mealsBySlot(log: DayLog): Record<MealSlot, Meal[]> {
-  const bySlot: Record<MealSlot, Meal[]> = { breakfast: [], lunch: [], dinner: [], snack: [] };
+export function mealsBySlot(log: DayLog): Record<MealSlot, BoundMeal[]> {
+  const bySlot: Record<MealSlot, BoundMeal[]> = { breakfast: [], lunch: [], dinner: [], snack: [] };
   for (const meal of log.meals) bySlot[meal.slot].push(meal);
   return bySlot;
 }
 
-export function slotTotals(meals: Meal[]): { calories: number; macros: Macros } {
+export function slotTotals(meals: BoundMeal[]): { calories: number; macros: Macros } {
   const macros: Macros = { carbs: 0, fat: 0, protein: 0 };
   let calories = 0;
   for (const meal of meals) {
-    calories += mealCalories(meal.macrosPerGram, meal.grams);
-    const m = mealMacros(meal.macrosPerGram, meal.grams);
+    calories += mealCalories(meal.macrosPer100g, meal.grams);
+    const m = mealMacros(meal.macrosPer100g, meal.grams);
     macros.carbs += m.carbs;
     macros.fat += m.fat;
     macros.protein += m.protein;
@@ -81,51 +81,4 @@ export function dailyAverage(points: DayPoint[]): { calories: number; carbs: num
     fat: sum((p) => p.fat) / n,
     protein: sum((p) => p.protein) / n,
   };
-}
-
-export interface RecentActivity {
-  title: string;
-  description: string;
-  caloriesPerHour: number;
-}
-
-export interface RecentMeal {
-  title: string;
-  description: string;
-  macrosPerGram: Macros;
-}
-
-function dedupeByTitle<T extends { title: string }>(items: T[], limit: number): T[] {
-  const seen = new Set<string>();
-  const result: T[] = [];
-  for (const item of items) {
-    const key = item.title.trim().toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    result.push(item);
-    if (result.length >= limit) break;
-  }
-  return result;
-}
-
-export function recentActivities(logs: DayLogs, limit = 20): RecentActivity[] {
-  const all = Object.values(logs)
-    .flatMap((log) => log.activities)
-    .sort((a, b) => b.loggedAt - a.loggedAt);
-  return dedupeByTitle(all, limit).map(({ title, description, caloriesPerHour }) => ({
-    title,
-    description,
-    caloriesPerHour,
-  }));
-}
-
-export function recentMeals(logs: DayLogs, limit = 20): RecentMeal[] {
-  const all = Object.values(logs)
-    .flatMap((log) => log.meals)
-    .sort((a, b) => b.loggedAt - a.loggedAt);
-  return dedupeByTitle(all, limit).map(({ title, description, macrosPerGram }) => ({
-    title,
-    description,
-    macrosPerGram,
-  }));
 }

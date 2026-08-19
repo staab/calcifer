@@ -29,22 +29,24 @@
       <button
         type="button"
         class={cn(
-          'flex flex-1 flex-col items-center gap-1 py-2.5 text-xs font-medium',
-          $view === tab.id ? 'text-primary' : 'text-muted-foreground'
+          'flex flex-1 flex-col items-center gap-1 py-2.5 text-xs',
+          $view === tab.id ? 'font-semibold text-primary' : 'font-medium text-muted-foreground'
         )}
         onclick={() => view.set(tab.id)}
       >
-        <svg
-          class="size-6"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d={tab.icon} />
-        </svg>
+        <span class={cn('rounded-full px-4 py-0.5', $view === tab.id && 'bg-primary/15')}>
+          <svg
+            class="size-6"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width={$view === tab.id ? 2.2 : 1.8}
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d={tab.icon} />
+          </svg>
+        </span>
         {tab.label}
       </button>
     {/each}
