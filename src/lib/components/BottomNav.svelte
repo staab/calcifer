@@ -22,7 +22,7 @@
 </script>
 
 <nav
-  class="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card pb-[env(safe-area-inset-bottom)]"
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
 >
   <div class="mx-auto flex max-w-md">
     {#each tabs as tab (tab.id)}

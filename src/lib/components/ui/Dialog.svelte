@@ -20,7 +20,9 @@
 <svelte:window {onkeydown} />
 
 {#if open}
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-6">
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-6 pt-[calc(1.5rem+env(safe-area-inset-top))] pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+  >
     <button
       type="button"
       aria-label="Close"

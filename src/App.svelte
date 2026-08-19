@@ -11,8 +11,10 @@
   const hasNav = $derived($view === 'dashboard' || $view === 'stats' || $view === 'settings');
 </script>
 
-<div class="mx-auto flex min-h-dvh max-w-md flex-col">
-  <main class={['flex-1', hasNav && 'pb-20']}>
+<div
+  class="mx-auto flex min-h-dvh max-w-md flex-col pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]"
+>
+  <main class={['flex-1', hasNav && 'pb-[calc(5rem+env(safe-area-inset-bottom))]']}>
     {#key $view}
       <div in:fly={{ y: 8, duration: 180 }}>
         {#if $view === 'dashboard'}
