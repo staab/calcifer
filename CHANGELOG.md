@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.1.1
+
+* Add app icon
+* Handle safe area insets
+
 # 0.1.0
 
 * AI-powered macro/calorie estimates
