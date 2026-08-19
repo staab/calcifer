@@ -1,4 +1,4 @@
-import type { Macros, MacroSplit, MacroTargets, Settings } from './types';
+import type { Macros, MacroTargets, Settings } from './types';
 import { GOAL_OFFSET_KCAL, KCAL_PER_GRAM, PA_COEFFICIENT } from './constants';
 
 export function lbsToKg(lbs: number): number {
@@ -48,15 +48,4 @@ export function caloriesFromMacros(m: Macros): number {
 
 export function mealCalories(macrosPer100g: Macros, grams: number): number {
   return Math.round(caloriesFromMacros(mealMacros(macrosPer100g, grams)));
-}
-
-export function rebalanceSplit(split: MacroSplit, changed: keyof MacroSplit, value: number): MacroSplit {
-  const v = Math.max(0, Math.min(100, Math.round(value)));
-  const keys: (keyof MacroSplit)[] = ['carbsPct', 'fatPct', 'proteinPct'];
-  const [a, b] = keys.filter((k) => k !== changed);
-  const rest = 100 - v;
-  const sum = split[a] + split[b];
-  const share = sum === 0 ? 0.5 : split[a] / sum;
-  const first = Math.round(rest * share);
-  return { ...split, [changed]: v, [a]: first, [b]: rest - first };
 }

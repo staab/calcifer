@@ -113,23 +113,6 @@
   </Card>
 
   <Card>
-    <h2 class="mb-3 text-sm font-semibold">AI estimates</h2>
-    <span class="mb-1 block text-xs text-muted-foreground">Brave LLM API key</span>
-    <Input
-      bind:value={braveApiKey}
-      type="password"
-      placeholder="API key"
-      clearable
-      oninput={() => commitApiKey(braveApiKey)}
-      onclear={() => commitApiKey('')}
-    />
-    <p class="mt-2 text-xs text-muted-foreground">
-      Used to auto-estimate calories and macros as you type. Get a key at
-      <a href="https://api-dashboard.search.brave.com" target="_blank" rel="noreferrer" class="underline">api-dashboard.search.brave.com</a>.
-    </p>
-  </Card>
-
-  <Card>
     <h2 class="mb-3 text-sm font-semibold">Your targets</h2>
     <div class="space-y-2 text-sm">
       <div class="flex justify-between">
@@ -161,5 +144,22 @@
         <span class="tabular-nums">{targets.protein} g</span>
       </div>
     </div>
+  </Card>
+
+  <Card>
+    <h2 class="mb-3 text-sm font-semibold">AI estimates</h2>
+    <span class="mb-1 block text-xs text-muted-foreground">Brave LLM API key</span>
+    <Input
+      bind:value={braveApiKey}
+      type="password"
+      placeholder="API key"
+      clearable
+      oninput={() => commitApiKey(braveApiKey)}
+      onclear={() => commitApiKey('')}
+    />
+    <p class="mt-2 text-xs text-muted-foreground">
+      Used to auto-estimate calories and macros as you type. Get a key at
+      <a href="https://api-dashboard.search.brave.com" target="_blank" rel="noreferrer" class="underline">api-dashboard.search.brave.com</a>.
+    </p>
   </Card>
 </div>
