@@ -86,7 +86,7 @@
     <h2 class="mb-3 text-sm font-semibold">Goal</h2>
     <div class="space-y-3" onfocusout={syncFromStore}>
       <div>
-        <span class="mb-1 block text-xs text-muted-foreground">Activity level</span>
+        <span class="mb-1 block text-xs text-muted-foreground">Activity level (excluding logged workouts)</span>
         <Select
           bind:value={activityLevel}
           options={activityOptions}
@@ -128,7 +128,7 @@
         <span class="tabular-nums">{signed($settings.dailyKcalAdjustment)} kcal</span>
       </div>
       <div class="flex justify-between border-t border-border pt-2 font-semibold">
-        <span>Daily calorie goal</span>
+        <span>Daily calorie goal (before activity)</span>
         <span class="tabular-nums">{calorieGoal($settings, 0)} kcal</span>
       </div>
       <div class="flex justify-between">

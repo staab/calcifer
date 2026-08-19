@@ -19,7 +19,8 @@ export const DEFAULT_SETTINGS: Settings = {
   age: 30,
   heightCm: 175,
   weightLbs: 170,
-  activityLevel: 'lowActive',
+  // Baseline excludes logged workouts — those are added back to the day's budget
+  activityLevel: 'sedentary',
   goal: 'maintain',
   dailyKcalAdjustment: 0,
   macroSplit: DEFAULT_MACRO_SPLIT,
