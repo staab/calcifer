@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.2
+
+* Tweak macro slider
+
 # 0.1.1
 
 * Add app icon
