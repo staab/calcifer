@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.4
+
+* Improve prompt for normalizing to 100g
+
 # 0.1.3
 
 * Add migrations, fix broken buttons
