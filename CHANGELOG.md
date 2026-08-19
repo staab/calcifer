@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.3
+
+* Add migrations, fix broken buttons
+
 # 0.1.2
 
 * Tweak macro slider
