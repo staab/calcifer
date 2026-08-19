@@ -22,11 +22,13 @@
     macrosPer100g: { carbs: 0, fat: 0, protein: 0 },
     lastUsedAt: 0,
   });
+  let pendingGrams = $state<number | null>(null);
 
   const recents = $derived($unboundMeals);
 
-  function pick(entry: UnboundMeal) {
+  function pick(entry: UnboundMeal, servingGrams: number | null = null) {
     pending = entry;
+    pendingGrams = servingGrams;
     dialogOpen = true;
   }
 
@@ -59,7 +61,7 @@
   </div>
 
   {#if showForm}
-    <MealForm onsubmit={(entry) => pick(saveUnboundMeal(entry))} />
+    <MealForm onsubmit={(entry, servingGrams) => pick(saveUnboundMeal(entry), servingGrams)} />
   {:else}
     <RecentList
       addLabel="Add meal"
@@ -80,6 +82,7 @@
   title={pending.title}
   label="Grams"
   unit="g"
+  initialAmount={pendingGrams}
   kcalPreview={(grams) => mealCalories(pending.macrosPer100g, grams)}
   estimateAmount={$llmConfig.braveApiKey
     ? (estimate) => llm.estimateMealGrams(pending.title, pending.description, estimate)

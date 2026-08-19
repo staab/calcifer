@@ -10,7 +10,10 @@
   let {
     onsubmit,
   }: {
-    onsubmit: (entry: { title: string; description: string; macrosPer100g: Macros }) => void;
+    onsubmit: (
+      entry: { title: string; description: string; macrosPer100g: Macros },
+      servingGrams: number | null
+    ) => void;
   } = $props();
 
   const llm = $derived(createLlm($llmConfig.braveApiKey));
@@ -18,6 +21,7 @@
   let description = $state('');
   let texts = $state({ carbs: '', fat: '', protein: '' });
   let touched = $state({ carbs: false, fat: false, protein: false });
+  let servingGrams = $state<number | null>(null);
   let estimating = $state(false);
   let seq = 0;
 
@@ -28,9 +32,10 @@
     if (title.trim() === '') return;
     const id = ++seq;
     estimating = true;
-    const est = await llm.estimateMealMacrosPer100g(title, description);
+    const est = await llm.estimateMealMacros(title, description);
     if (id !== seq) return;
     estimating = false;
+    servingGrams = est?.servingGrams ?? null;
     if (!est) return;
     for (const key of macroKeys) {
       if (!touched[key]) texts[key] = String(est.macrosPer100g[key]);
@@ -75,7 +80,7 @@
   <Button
     class="mt-1 w-full"
     disabled={!valid}
-    onclick={() => onsubmit({ title: title.trim(), description, macrosPer100g })}
+    onclick={() => onsubmit({ title: title.trim(), description, macrosPer100g }, servingGrams)}
   >
     Next
   </Button>

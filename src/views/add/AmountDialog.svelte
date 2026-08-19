@@ -12,6 +12,7 @@
     kcalPreview,
     onconfirm,
     estimateAmount,
+    initialAmount = null,
   }: {
     open: boolean;
     title: string;
@@ -20,6 +21,7 @@
     kcalPreview: (amount: number) => number;
     onconfirm: (amount: number) => void;
     estimateAmount?: (estimate: string) => Promise<number | null>;
+    initialAmount?: number | null;
   } = $props();
 
   let amountText = $state('');
@@ -41,7 +43,7 @@
 
   $effect(() => {
     if (open) {
-      amountText = '';
+      amountText = initialAmount === null ? '' : String(initialAmount);
       estimateText = '';
       touched = false;
       estimating = false;

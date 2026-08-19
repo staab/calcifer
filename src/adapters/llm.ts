@@ -13,11 +13,12 @@ export interface ActivityEstimate {
 
 export interface MealEstimate {
   macrosPer100g: Macros;
+  servingGrams: number;
 }
 
 export interface LlmAdapter {
   estimateActivityCaloriesPerHour(title: string, description: string): Promise<ActivityEstimate | null>;
-  estimateMealMacrosPer100g(title: string, description: string): Promise<MealEstimate | null>;
+  estimateMealMacros(title: string, description: string): Promise<MealEstimate | null>;
   estimateActivityMinutes(title: string, description: string, estimate: string): Promise<number | null>;
   estimateMealGrams(title: string, description: string, estimate: string): Promise<number | null>;
 }
@@ -75,17 +76,24 @@ export function createLlm(apiKey: string): LlmAdapter {
       if (!result || !inRange(result.caloriesPerHour, 0, 3000)) return null;
       return { caloriesPerHour: result.caloriesPerHour };
     },
-    async estimateMealMacrosPer100g(title, description) {
+    async estimateMealMacros(title, description) {
       if (apiKey === '') return null;
       const result = await chat(
         apiKey,
-        'You estimate the macronutrient composition of foods. Respond with ONLY a JSON object of the form {"carbs": number, "fat": number, "protein": number} — grams of each macronutrient per 100 grams of the described food, each between 0 and 100. No prose, no citations.',
+        'You estimate the nutritional content of foods. Respond with ONLY a JSON object of the form {"servingGrams": number, "carbs": number, "fat": number, "protein": number}. servingGrams is the total weight in grams of the described portion; if no portion size is described, use a typical single serving. carbs, fat, and protein are the grams of each macronutrient contained in the full servingGrams of that portion. No prose, no citations.',
         `Food: ${title}\nDescription: ${description}`
       );
       if (!result) return null;
-      const { carbs, fat, protein } = result;
-      if (!inRange(carbs, 0, 100) || !inRange(fat, 0, 100) || !inRange(protein, 0, 100)) return null;
-      return { macrosPer100g: { carbs, fat, protein } };
+      const { servingGrams, carbs, fat, protein } = result;
+      if (!inRange(servingGrams, 1, 5000)) return null;
+      if (!inRange(carbs, 0, 5000) || !inRange(fat, 0, 5000) || !inRange(protein, 0, 5000)) return null;
+      // macros are constituents of the portion, so their total can't exceed its weight
+      if (carbs + fat + protein > servingGrams) return null;
+      const per100 = (n: number) => Math.round((n * 100 * 10) / servingGrams) / 10;
+      return {
+        macrosPer100g: { carbs: per100(carbs), fat: per100(fat), protein: per100(protein) },
+        servingGrams: Math.round(servingGrams),
+      };
     },
     async estimateActivityMinutes(title, description, estimate) {
       if (apiKey === '') return null;
