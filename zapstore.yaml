@@ -1,0 +1,10 @@
+name: Calcifer
+description: AI-powered calorie tracker
+tags:
+  - calorie
+  - tracker
+  - ai
+license: MIT
+repository: https://gitea.coracle.social/hodlbod/calcifer
+release_source: ./android/app/build/outputs/apk/release/app-release.apk
+release_notes: ./CHANGELOG.md
