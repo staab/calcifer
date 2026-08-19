@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.1.5
+
+* Switch to OpenRouter
+* Improve prompts
+* Move API key banner
+
 # 0.1.4
 
 * Improve prompt for normalizing to 100g
