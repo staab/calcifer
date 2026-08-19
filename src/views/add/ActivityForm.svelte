@@ -3,6 +3,7 @@
   import Button from '$lib/components/ui/Button.svelte';
   import { debounce } from '$lib/utils';
   import { createLlm } from '$src/adapters/llm';
+  import { llmConfig } from '$src/state/settings';
 
   let {
     onsubmit,
@@ -10,18 +11,22 @@
     onsubmit: (entry: { title: string; description: string; caloriesPerHour: number }) => void;
   } = $props();
 
-  const llm = createLlm();
+  const llm = $derived(createLlm($llmConfig.braveApiKey));
   let title = $state('');
   let description = $state('');
   let calText = $state('');
   let touched = $state(false);
+  let estimating = $state(false);
   let seq = 0;
 
   const requestEstimate = debounce(async () => {
     if (title.trim() === '') return;
     const id = ++seq;
+    estimating = true;
     const est = await llm.estimateActivityCaloriesPerHour(title, description);
-    if (est && id === seq && !touched) calText = String(est.caloriesPerHour);
+    if (id !== seq) return;
+    estimating = false;
+    if (est && !touched) calText = String(est.caloriesPerHour);
   }, 600);
 
   const caloriesPerHour = $derived(Number(calText) || 0);
@@ -39,6 +44,7 @@
       inputmode="decimal"
       placeholder="0"
       clearable
+      loading={estimating && !touched}
       oninput={() => (touched = true)}
       onclear={() => {
         touched = false;

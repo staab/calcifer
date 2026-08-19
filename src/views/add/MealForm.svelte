@@ -3,6 +3,7 @@
   import Button from '$lib/components/ui/Button.svelte';
   import { debounce } from '$lib/utils';
   import { createLlm } from '$src/adapters/llm';
+  import { llmConfig } from '$src/state/settings';
   import { caloriesFromMacros } from '$src/domain/energy';
   import type { Macros } from '$src/domain/types';
 
@@ -12,11 +13,12 @@
     onsubmit: (entry: { title: string; description: string; macrosPerGram: Macros }) => void;
   } = $props();
 
-  const llm = createLlm();
+  const llm = $derived(createLlm($llmConfig.braveApiKey));
   let title = $state('');
   let description = $state('');
   let texts = $state({ carbs: '', fat: '', protein: '' });
   let touched = $state({ carbs: false, fat: false, protein: false });
+  let estimating = $state(false);
   let seq = 0;
 
   const macroKeys = ['carbs', 'fat', 'protein'] as const;
@@ -25,8 +27,11 @@
   const requestEstimate = debounce(async () => {
     if (title.trim() === '') return;
     const id = ++seq;
+    estimating = true;
     const est = await llm.estimateMealMacrosPerGram(title, description);
-    if (!est || id !== seq) return;
+    if (id !== seq) return;
+    estimating = false;
+    if (!est) return;
     for (const key of macroKeys) {
       if (!touched[key]) texts[key] = String(est.macrosPerGram[key]);
     }
@@ -57,6 +62,7 @@
           inputmode="decimal"
           placeholder="0"
           clearable
+          loading={estimating && !touched[key]}
           oninput={() => (touched[key] = true)}
           onclear={() => {
             touched[key] = false;

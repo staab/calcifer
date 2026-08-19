@@ -3,7 +3,7 @@
   import Input from '$lib/components/ui/Input.svelte';
   import Select from '$lib/components/ui/Select.svelte';
   import MacroSplitSliders from './settings/MacroSplitSliders.svelte';
-  import { settings } from '$src/state/settings';
+  import { settings, llmConfig } from '$src/state/settings';
   import { tdee, calorieGoal, macroTargets } from '$src/domain/energy';
   import { GOAL_OFFSET_KCAL } from '$src/domain/constants';
   import type { ActivityLevel, Goal, MacroSplit } from '$src/domain/types';
@@ -14,6 +14,11 @@
   let adjustment = $state(String($settings.dailyKcalAdjustment));
   let activityLevel = $state<string>($settings.activityLevel);
   let goal = $state<string>($settings.goal);
+  let braveApiKey = $state($llmConfig.braveApiKey);
+
+  function commitApiKey(key: string) {
+    llmConfig.update((c) => ({ ...c, braveApiKey: key.trim() }));
+  }
 
   const activityOptions = [
     { value: 'sedentary', label: 'Sedentary' },
@@ -105,6 +110,23 @@
 
   <Card>
     <MacroSplitSliders split={$settings.macroSplit} onchange={setSplit} />
+  </Card>
+
+  <Card>
+    <h2 class="mb-3 text-sm font-semibold">AI estimates</h2>
+    <span class="mb-1 block text-xs text-muted-foreground">Brave LLM API key</span>
+    <Input
+      bind:value={braveApiKey}
+      type="password"
+      placeholder="API key"
+      clearable
+      oninput={() => commitApiKey(braveApiKey)}
+      onclear={() => commitApiKey('')}
+    />
+    <p class="mt-2 text-xs text-muted-foreground">
+      Used to auto-estimate calories and macros as you type. Get a key at
+      <a href="https://api-dashboard.search.brave.com" target="_blank" rel="noreferrer" class="underline">api-dashboard.search.brave.com</a>.
+    </p>
   </Card>
 
   <Card>
