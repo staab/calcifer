@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { view } from '$src/state/app';
+  import { goToTab } from '$src/state/app';
   import { llmConfig, bannerDismissed } from '$src/state/settings';
 </script>
 
 {#if $llmConfig.openrouterApiKey === '' && !$bannerDismissed}
   <div class="flex items-center gap-2 rounded-lg border border-border bg-card p-3">
-    <button type="button" class="flex-1 text-left text-sm text-muted-foreground" onclick={() => view.set('settings')}>
+    <button type="button" class="flex-1 text-left text-sm text-muted-foreground" onclick={() => goToTab('settings')}>
       Add an OpenRouter API key in Settings to auto-estimate calories and macros.
     </button>
     <button

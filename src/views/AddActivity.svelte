@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { view, selectedDate } from '$src/state/app';
+  import { back, selectedDate } from '$src/state/app';
   import { addActivity } from '$src/state/log';
   import {
     unboundActivities,
@@ -36,7 +36,7 @@
       minutes,
     });
     touchUnboundActivity(pending.id);
-    view.set('dashboard');
+    back();
   }
 </script>
 
@@ -45,7 +45,7 @@
     <Button
       variant="ghost"
       size="icon"
-      onclick={() => (showForm ? (showForm = false) : view.set('dashboard'))}
+      onclick={() => (showForm ? (showForm = false) : back())}
     >
       <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M19 12H5m7-7l-7 7 7 7" />

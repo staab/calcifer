@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { view, type View } from '$src/state/app';
+  import { view, goToTab, type View } from '$src/state/app';
   import { cn } from '$lib/utils';
 
   const tabs: { id: View; label: string; icon: string }[] = [
@@ -32,7 +32,7 @@
           'flex flex-1 flex-col items-center gap-1 py-2.5 text-xs',
           $view === tab.id ? 'font-semibold text-primary' : 'font-medium text-muted-foreground'
         )}
-        onclick={() => view.set(tab.id)}
+        onclick={() => goToTab(tab.id)}
       >
         <span class={cn('rounded-full px-4 py-0.5', $view === tab.id && 'bg-primary/15')}>
           <svg

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fly } from 'svelte/transition';
-  import { view } from '$src/state/app';
+  import { view, type View } from '$src/state/app';
   import BottomNav from '$lib/components/BottomNav.svelte';
   import Dashboard from '$src/views/Dashboard.svelte';
   import AddActivity from '$src/views/AddActivity.svelte';
@@ -9,6 +9,23 @@
   import Settings from '$src/views/Settings.svelte';
 
   const hasNav = $derived($view === 'dashboard' || $view === 'stats' || $view === 'settings');
+
+  const scrollPositions = new Map<View, number>();
+  let prevView: View = $view;
+
+  // Save the outgoing view's scroll before its DOM is torn down.
+  $effect.pre(() => {
+    const current = $view;
+    if (prevView !== current) {
+      scrollPositions.set(prevView, window.scrollY);
+      prevView = current;
+    }
+  });
+
+  // Restore the incoming view's scroll (or top) once it's mounted.
+  $effect(() => {
+    window.scrollTo(0, scrollPositions.get($view) ?? 0);
+  });
 </script>
 
 <div

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { view, selectedDate, addMealSlot } from '$src/state/app';
+  import { back, selectedDate, addMealSlot } from '$src/state/app';
   import { addMeal } from '$src/state/log';
   import { unboundMeals, saveUnboundMeal, touchUnboundMeal, removeUnboundMeal } from '$src/state/library';
   import { mealCalories, mealMacros } from '$src/domain/energy';
@@ -41,7 +41,7 @@
       slot: $addMealSlot,
     });
     touchUnboundMeal(pending.id);
-    view.set('dashboard');
+    back();
   }
 </script>
 
@@ -50,7 +50,7 @@
     <Button
       variant="ghost"
       size="icon"
-      onclick={() => (showForm ? (showForm = false) : view.set('dashboard'))}
+      onclick={() => (showForm ? (showForm = false) : back())}
     >
       <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M19 12H5m7-7l-7 7 7 7" />

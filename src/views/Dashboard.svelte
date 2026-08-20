@@ -5,7 +5,7 @@
   import { macroTargets } from '$src/domain/energy';
   import { todayKey, addDays, shortLabel } from '$lib/date';
   import { formatMacrosCompact } from '$lib/format';
-  import { view, selectedDate, addMealSlot } from '$src/state/app';
+  import { navigate, selectedDate, addMealSlot } from '$src/state/app';
   import { settings } from '$src/state/settings';
   import { dayLogs, removeActivity, removeMeal } from '$src/state/log';
   import Button from '$lib/components/ui/Button.svelte';
@@ -41,7 +41,7 @@
 
   function openAddMeal(slot: MealSlot) {
     addMealSlot.set(slot);
-    view.set('add-meal');
+    navigate('add-meal');
   }
 
   let touchX = 0;
@@ -82,7 +82,7 @@
     title="Activity"
     kind="activity"
     items={log.activities}
-    onadd={() => view.set('add-activity')}
+    onadd={() => navigate('add-activity')}
     ondelete={(id) => removeActivity($selectedDate, id)}
   />
 
