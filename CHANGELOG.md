@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.7
+
+* Change bundle identifier
+
 # 0.1.6
 
 * Handle back button
