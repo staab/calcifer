@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
+    "bump": "bash scripts/bump.sh",
     "build:android": "vite build && cap sync android && cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
