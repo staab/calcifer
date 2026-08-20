@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calcifer - AI-Powered Calorie & Macro Counter</title>
+  <meta name="description" content="A simple, easy-to-use AI-powered calorie and macro counter. Private, fast, offline-first with zero accounts required." />
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-content">
+      <a href="#" class="brand">
+        <img src="icon.png" alt="Calcifer Icon" class="brand-icon" />
+        <span class="brand-name">Calcifer</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="#download" class="nav-cta">Get the App</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <div class="badge">🔥 Simple &amp; AI-Powered</div>
+        <h1 class="hero-title">Track your calories and macros effortlessly.</h1>
+        <p class="hero-subtitle">
+          Calcifer is a lightweight, distraction-free nutrition tracker. Powered by on-device AI to estimate calories and macros instantly—with zero accounts, no subscriptions, and complete offline privacy.
+        </p>
+
+        <!-- App Store Download Badges -->
+        <div class="store-buttons" id="download">
+          <a href="#app-store-stub" class="store-btn" onclick="event.preventDefault(); alert('iOS App Store release coming soon!');">
+            <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.9.04-2.02.6-2.67 1.34-.56.65-1.07 1.71-.94 2.74 1.01.08 2.06-.52 2.69-1.21z"/>
+            </svg>
+            <div class="store-text">
+              <span class="store-label">Download on the</span>
+              <span class="store-name">App Store</span>
+            </div>
+          </a>
+
+          <a href="#play-store-stub" class="store-btn" onclick="event.preventDefault(); alert('Google Play Store release coming soon!');">
+            <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3.609 1.814L13.792 12 3.61 22.186c-.365-.333-.61-.83-.61-1.424V3.238c0-.594.245-1.091.609-1.424zm11.238 11.241L4.858 3.066l11.458 6.55-1.469 3.439zm0 .002l1.469 3.439-11.458 6.55 9.989-9.989zm1.503-1.057l3.208 1.833c.858.49.858 1.29 0 1.78l-3.208 1.833-2.046-2.723 2.046-2.723z"/>
+            </svg>
+            <div class="store-text">
+              <span class="store-label">Get it on</span>
+              <span class="store-name">Google Play</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="hero-highlights">
+          <div class="highlight-item">
+            <span class="highlight-check">✓</span> 100% Device-Only Storage
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-check">✓</span> No Account Needed
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-check">✓</span> Free &amp; Fast
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-preview">
+        <div class="phone-frame">
+          <img src="dashboard.png" alt="Calcifer Dashboard preview" class="phone-screen" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Smart nutrition tracking, stripped of clutter</h2>
+        <p class="section-subtitle">Everything you need to hit your health goals without the bloat of traditional calorie tracking apps.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3 class="feature-title">AI Natural Language Logging</h3>
+          <p class="feature-desc">
+            Type your meal or workout in plain English (like <em>"grilled chicken breast with quinoa and avocado"</em>). Calcifer automatically calculates carbs, fat, protein, and calories.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3 class="feature-title">Intuitive Macro &amp; Calorie Budgets</h3>
+          <p class="feature-desc">
+            Visual radial charts and progress bars display your remaining daily calorie targets and carbohydrate, fat, and protein thresholds at a single glance.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3 class="feature-title">Privacy-First &amp; Offline</h3>
+          <p class="feature-desc">
+            Your data is yours alone. No accounts, no emails, no remote tracking. Everything is saved locally on your device with lightning-fast offline access.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title">One-Tap Quick Logging</h3>
+          <p class="feature-desc">
+            Quickly re-add frequent meals and activities from your recent library. Adjust portion sizes in grams or duration in minutes seamlessly.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">Visual Analytics &amp; Stats</h3>
+          <p class="feature-desc">
+            Monitor 7-day, 30-day, 90-day, and all-time macro balance trends with interactive multi-metric charts and daily average bars.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚙️</div>
+          <h3 class="feature-title">Customizable Goals &amp; Splits</h3>
+          <p class="feature-desc">
+            Fine-tune your personal Basal Metabolic Rate (BMR), TDEE, weight goals, and customize your exact percentage split for carbs, fat, and protein.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Gallery Section -->
+  <section id="screenshots" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Designed for focus and speed</h2>
+        <p class="section-subtitle">Take a look inside Calcifer's clean, dark-mode interface.</p>
+      </div>
+
+      <div class="screens-grid">
+        <div class="screen-card">
+          <div class="screen-image-wrapper">
+            <img src="dashboard.png" alt="Today's Dashboard" class="screen-img" />
+          </div>
+          <div class="screen-info">
+            <h4>Daily Dashboard</h4>
+            <p>Radial calorie ring, macro bars, and meal logs by category.</p>
+          </div>
+        </div>
+
+        <div class="screen-card">
+          <div class="screen-image-wrapper">
+            <img src="add.png" alt="AI-Powered Food Logging" class="screen-img" />
+          </div>
+          <div class="screen-info">
+            <h4>AI-Powered Estimation</h4>
+            <p>Smart macro calculations with customizable manual overrides.</p>
+          </div>
+        </div>
+
+        <div class="screen-card">
+          <div class="screen-image-wrapper">
+            <img src="list.png" alt="Recent Food & Activity List" class="screen-img" />
+          </div>
+          <div class="screen-info">
+            <h4>Fast Selection</h4>
+            <p>Instant search and one-tap re-logging from your recent items.</p>
+          </div>
+        </div>
+
+        <div class="screen-card">
+          <div class="screen-image-wrapper">
+            <img src="stats.png" alt="Nutritional Trends and Stats" class="screen-img" />
+          </div>
+          <div class="screen-info">
+            <h4>Progress &amp; Trends</h4>
+            <p>Interactive multi-line charts and daily average summaries.</p>
+          </div>
+        </div>
+
+        <div class="screen-card">
+          <div class="screen-image-wrapper">
+            <img src="settings.png" alt="Customizable Macro Settings" class="screen-img" />
+          </div>
+          <div class="screen-info">
+            <h4>Macro &amp; Goal Splits</h4>
+            <p>Interactive sliders for balanced, keto, or high-protein targets.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <h2 class="cta-title">Ready to take control of your nutrition?</h2>
+        <p class="cta-text">Start tracking today with no accounts, no ads, and no friction.</p>
+        
+        <div class="store-buttons store-buttons-center">
+          <a href="#app-store-stub" class="store-btn" onclick="event.preventDefault(); alert('iOS App Store release coming soon!');">
+            <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.9.04-2.02.6-2.67 1.34-.56.65-1.07 1.71-.94 2.74 1.01.08 2.06-.52 2.69-1.21z"/>
+            </svg>
+            <div class="store-text">
+              <span class="store-label">Download on the</span>
+              <span class="store-name">App Store</span>
+            </div>
+          </a>
+
+          <a href="#play-store-stub" class="store-btn" onclick="event.preventDefault(); alert('Google Play Store release coming soon!');">
+            <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3.609 1.814L13.792 12 3.61 22.186c-.365-.333-.61-.83-.61-1.424V3.238c0-.594.245-1.091.609-1.424zm11.238 11.241L4.858 3.066l11.458 6.55-1.469 3.439zm0 .002l1.469 3.439-11.458 6.55 9.989-9.989zm1.503-1.057l3.208 1.833c.858.49.858 1.29 0 1.78l-3.208 1.833-2.046-2.723 2.046-2.723z"/>
+            </svg>
+            <div class="store-text">
+              <span class="store-label">Get it on</span>
+              <span class="store-name">Google Play</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <img src="icon.png" alt="Calcifer Logo" class="footer-icon" />
+        <span>Calcifer</span>
+      </div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <p class="footer-copy">&copy; 2026 Calcifer. Private, simple, and AI-powered calorie &amp; macro tracking.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
