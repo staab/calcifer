@@ -1,5 +1,11 @@
 # Changelog
 
+# 0.1.6
+
+* Handle back button
+* Get ios build working
+* Tweak wording for clarity
+
 # 0.1.5
 
 * Switch to OpenRouter
