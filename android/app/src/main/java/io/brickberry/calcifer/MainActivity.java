@@ -1,4 +1,4 @@
-package com.calcifer.app;
+package io.brickberry.calcifer;
 
 import com.getcapacitor.BridgeActivity;
 

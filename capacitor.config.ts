@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.calcifer.app',
+  appId: 'io.brickberry.calcifer',
   appName: 'Calcifer',
   webDir: 'dist',
 };
