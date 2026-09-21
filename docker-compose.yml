@@ -1,10 +1,12 @@
 services:
-  jev-proxy:
+  api:
     build: ./server
     restart: unless-stopped
     environment:
       TYPESAFE_API_KEY: ${TYPESAFE_API_KEY:?set TYPESAFE_API_KEY in .env}
       PORT: 8788
+      # rate limits are per client ip, which only works behind the reverse proxy below
+      TRUST_PROXY: '1'
     # bound to loopback; terminate TLS with the reverse proxy in front of it
     ports:
       - '127.0.0.1:8788:8788'

@@ -2,7 +2,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_JEV_PROXY_URL?: string;
+  readonly VITE_API_URL?: string;
 }
 
 interface ImportMeta {
