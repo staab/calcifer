@@ -5,15 +5,13 @@
   import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 
   let {
-    addLabel,
     items,
     onadd,
     onselect,
     ondelete,
   }: {
-    addLabel: string;
     items: { title: string; description: string; detail?: string }[];
-    onadd: () => void;
+    onadd: (title: string) => void;
     onselect: (index: number) => void;
     ondelete: (index: number) => void;
   } = $props();
@@ -22,8 +20,10 @@
   let pendingIndex = $state(-1);
   let query = $state('');
 
+  const term = $derived(query.trim());
+
   const visible = $derived.by(() => {
-    const q = query.trim().toLowerCase();
+    const q = term.toLowerCase();
     return items
       .map((item, index) => ({ item, index }))
       .filter(({ item }) => q === '' || item.title.toLowerCase().includes(q) || item.description.toLowerCase().includes(q));
@@ -31,12 +31,12 @@
 </script>
 
 <div class="flex flex-col gap-3">
-  <Button class="w-full" onclick={onadd}>{addLabel}</Button>
+  <Input bind:value={query} placeholder="Search" clearable onclear={() => (query = '')} />
+  {#if term !== ''}
+    <Button class="w-full" onclick={() => onadd(term)}>Add "{term}"</Button>
+  {/if}
   {#if items.length > 0}
     <h2 class="mt-2 text-sm font-medium text-muted-foreground">Recent</h2>
-    {#if items.length > 5}
-      <Input bind:value={query} placeholder="Search" clearable onclear={() => (query = '')} />
-    {/if}
     {#each visible as { item, index: i } (i)}
       <Card class="flex items-center gap-3">
         <button type="button" class="flex min-w-0 flex-1 items-center gap-3 text-left" onclick={() => onselect(i)}>

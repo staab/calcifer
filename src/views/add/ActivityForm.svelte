@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import Input from '$lib/components/ui/Input.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { debounce } from '$lib/utils';
@@ -7,13 +8,16 @@
   import ApiKeyBanner from '../ApiKeyBanner.svelte';
 
   let {
+    initialTitle = '',
     onsubmit,
   }: {
+    initialTitle?: string;
     onsubmit: (entry: { title: string; description: string; caloriesPerHour: number }) => void;
   } = $props();
 
   const llm = $derived(createLlm($llmConfig.openrouterApiKey));
-  let title = $state('');
+  const seedTitle = untrack(() => initialTitle.trim());
+  let title = $state(seedTitle);
   let description = $state('');
   let calText = $state('');
   let touched = $state(false);
@@ -29,6 +33,9 @@
     estimating = false;
     if (est && !touched) calText = String(est.caloriesPerHour);
   }, 600);
+
+  // a title carried in from the search box is as good as one typed here
+  if (seedTitle !== '') requestEstimate();
 
   const caloriesPerHour = $derived(Number(calText) || 0);
   const valid = $derived(title.trim() !== '' && caloriesPerHour > 0);

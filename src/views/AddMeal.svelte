@@ -14,6 +14,7 @@
 
   const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   let showForm = $state(false);
+  let formTitle = $state('');
   let dialogOpen = $state(false);
   let pending = $state<UnboundMeal>({
     id: '',
@@ -61,16 +62,21 @@
   </div>
 
   {#if showForm}
-    <MealForm onsubmit={(entry, servingGrams) => pick(saveUnboundMeal(entry), servingGrams)} />
+    <MealForm
+      initialTitle={formTitle}
+      onsubmit={(entry, servingGrams) => pick(saveUnboundMeal(entry), servingGrams)}
+    />
   {:else}
     <RecentList
-      addLabel="Add meal"
       items={recents.map((r) => ({
         title: r.title,
         description: r.description,
         detail: `${formatMacrosCompact(mealMacros(r.macrosPer100g, 100))} / 100 g`,
       }))}
-      onadd={() => (showForm = true)}
+      onadd={(title) => {
+        formTitle = title;
+        showForm = true;
+      }}
       onselect={(i) => pick(recents[i])}
       ondelete={(i) => removeUnboundMeal(recents[i].id)}
     />

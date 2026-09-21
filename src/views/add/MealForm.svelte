@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import Input from '$lib/components/ui/Input.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { debounce } from '$lib/utils';
@@ -9,8 +10,10 @@
   import ApiKeyBanner from '../ApiKeyBanner.svelte';
 
   let {
+    initialTitle = '',
     onsubmit,
   }: {
+    initialTitle?: string;
     onsubmit: (
       entry: { title: string; description: string; macrosPer100g: Macros },
       servingGrams: number | null
@@ -18,7 +21,8 @@
   } = $props();
 
   const llm = $derived(createLlm($llmConfig.openrouterApiKey));
-  let title = $state('');
+  const seedTitle = untrack(() => initialTitle.trim());
+  let title = $state(seedTitle);
   let description = $state('');
   let texts = $state({ carbs: '', fat: '', protein: '' });
   let touched = $state({ carbs: false, fat: false, protein: false });
@@ -42,6 +46,9 @@
       if (!touched[key]) texts[key] = String(est.macrosPer100g[key]);
     }
   }, 600);
+
+  // a title carried in from the search box is as good as one typed here
+  if (seedTitle !== '') requestEstimate();
 
   const macrosPer100g = $derived({
     carbs: Number(texts.carbs) || 0,

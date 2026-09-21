@@ -18,6 +18,7 @@
 
   const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   let showForm = $state(false);
+  let formTitle = $state('');
   let dialogOpen = $state(false);
   let pending = $state<UnboundActivity>({ id: '', title: '', description: '', caloriesPerHour: 0, lastUsedAt: 0 });
 
@@ -55,16 +56,18 @@
   </div>
 
   {#if showForm}
-    <ActivityForm onsubmit={(entry) => pick(saveUnboundActivity(entry))} />
+    <ActivityForm initialTitle={formTitle} onsubmit={(entry) => pick(saveUnboundActivity(entry))} />
   {:else}
     <RecentList
-      addLabel="Add activity"
       items={recents.map((r) => ({
         title: r.title,
         description: r.description,
         detail: `${r.caloriesPerHour} kcal/hr`,
       }))}
-      onadd={() => (showForm = true)}
+      onadd={(title) => {
+        formTitle = title;
+        showForm = true;
+      }}
       onselect={(i) => pick(recents[i])}
       ondelete={(i) => removeUnboundActivity(recents[i].id)}
     />
