@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.1.8
+
+* Use typesafe api instead of openrouter
+* Improve search/add UI
+
 # 0.1.7
 
 * Change bundle identifier
