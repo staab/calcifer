@@ -3,7 +3,7 @@
   import Input from '$lib/components/ui/Input.svelte';
   import Select from '$lib/components/ui/Select.svelte';
   import MacroSplitSliders from './settings/MacroSplitSliders.svelte';
-  import { settings, llmConfig } from '$src/state/settings';
+  import { settings } from '$src/state/settings';
   import { tdee, calorieGoal, macroTargets } from '$src/domain/energy';
   import { GOAL_OFFSET_KCAL } from '$src/domain/constants';
   import type { ActivityLevel, Goal, MacroSplit } from '$src/domain/types';
@@ -14,12 +14,6 @@
   let adjustment = $state(String($settings.dailyKcalAdjustment));
   let activityLevel = $state<string>($settings.activityLevel);
   let goal = $state<string>($settings.goal);
-  let apiKey = $state($llmConfig.openrouterApiKey);
-
-  function commitApiKey(key: string) {
-    llmConfig.update((c) => ({ ...c, openrouterApiKey: key.trim() }));
-  }
-
   const activityOptions = [
     { value: 'sedentary', label: 'Sedentary' },
     { value: 'lowActive', label: 'Low Active' },
@@ -144,22 +138,5 @@
         <span class="tabular-nums">{targets.protein} g</span>
       </div>
     </div>
-  </Card>
-
-  <Card>
-    <h2 class="mb-3 text-sm font-semibold">AI estimates</h2>
-    <span class="mb-1 block text-xs text-muted-foreground">OpenRouter API key</span>
-    <Input
-      bind:value={apiKey}
-      type="password"
-      placeholder="API key"
-      clearable
-      oninput={() => commitApiKey(apiKey)}
-      onclear={() => commitApiKey('')}
-    />
-    <p class="mt-2 text-xs text-muted-foreground">
-      Used to auto-estimate calories and macros as you type. Get a key at
-      <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer" class="underline">openrouter.ai/keys</a>.
-    </p>
   </Card>
 </div>

@@ -3,6 +3,7 @@ import { Preferences } from '@capacitor/preferences';
 export interface StorageAdapter {
   get(key: string): Promise<string | null>;
   set(key: string, value: string): Promise<void>;
+  remove(key: string): Promise<void>;
 }
 
 export function createStorage(): StorageAdapter {
@@ -20,6 +21,13 @@ export function createStorage(): StorageAdapter {
         await Preferences.set({ key, value });
       } catch {
         window.localStorage.setItem(key, value);
+      }
+    },
+    async remove(key) {
+      try {
+        await Preferences.remove({ key });
+      } catch {
+        window.localStorage.removeItem(key);
       }
     },
   };

@@ -3,9 +3,7 @@
   import Input from '$lib/components/ui/Input.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { debounce } from '$lib/utils';
-  import { createLlm } from '$src/adapters/llm';
-  import { llmConfig } from '$src/state/settings';
-  import ApiKeyBanner from '../ApiKeyBanner.svelte';
+  import { estimateActivityCaloriesPerHour } from '$src/adapters/jev';
 
   let {
     initialTitle = '',
@@ -15,7 +13,6 @@
     onsubmit: (entry: { title: string; description: string; caloriesPerHour: number }) => void;
   } = $props();
 
-  const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   const seedTitle = untrack(() => initialTitle.trim());
   let title = $state(seedTitle);
   let description = $state('');
@@ -28,7 +25,7 @@
     if (title.trim() === '') return;
     const id = ++seq;
     estimating = true;
-    const est = await llm.estimateActivityCaloriesPerHour(title, description);
+    const est = await estimateActivityCaloriesPerHour(title, description);
     if (id !== seq) return;
     estimating = false;
     if (est && !touched) calText = String(est.caloriesPerHour);
@@ -60,7 +57,6 @@
       }}
     />
   </div>
-  <ApiKeyBanner />
   <Button
     class="mt-1 w-full"
     disabled={!valid}

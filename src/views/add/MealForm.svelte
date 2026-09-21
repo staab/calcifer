@@ -3,11 +3,9 @@
   import Input from '$lib/components/ui/Input.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { debounce } from '$lib/utils';
-  import { createLlm } from '$src/adapters/llm';
-  import { llmConfig } from '$src/state/settings';
+  import { estimateMealMacros } from '$src/adapters/jev';
   import { caloriesFromMacros } from '$src/domain/energy';
   import type { Macros } from '$src/domain/types';
-  import ApiKeyBanner from '../ApiKeyBanner.svelte';
 
   let {
     initialTitle = '',
@@ -20,7 +18,6 @@
     ) => void;
   } = $props();
 
-  const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   const seedTitle = untrack(() => initialTitle.trim());
   let title = $state(seedTitle);
   let description = $state('');
@@ -37,7 +34,7 @@
     if (title.trim() === '') return;
     const id = ++seq;
     estimating = true;
-    const est = await llm.estimateMealMacros(title, description);
+    const est = await estimateMealMacros(title, description);
     if (id !== seq) return;
     estimating = false;
     servingGrams = est?.servingGrams ?? null;
@@ -85,7 +82,6 @@
       </div>
     {/each}
   </div>
-  <ApiKeyBanner />
   <Button
     class="mt-1 w-full"
     disabled={!valid}

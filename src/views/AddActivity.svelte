@@ -8,15 +8,13 @@
     removeUnboundActivity,
   } from '$src/state/library';
   import { activityCalories } from '$src/domain/energy';
-  import { createLlm } from '$src/adapters/llm';
-  import { llmConfig } from '$src/state/settings';
+  import { canEstimate, estimateActivityMinutes } from '$src/adapters/jev';
   import type { UnboundActivity } from '$src/domain/types';
   import Button from '$lib/components/ui/Button.svelte';
   import RecentList from '$src/views/add/RecentList.svelte';
   import ActivityForm from '$src/views/add/ActivityForm.svelte';
   import AmountDialog from '$src/views/add/AmountDialog.svelte';
 
-  const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   let showForm = $state(false);
   let formTitle = $state('');
   let dialogOpen = $state(false);
@@ -80,8 +78,8 @@
   label="Minutes"
   unit="min"
   kcalPreview={(minutes) => activityCalories(pending.caloriesPerHour, minutes)}
-  estimateAmount={$llmConfig.openrouterApiKey
-    ? (estimate) => llm.estimateActivityMinutes(pending.title, pending.description, estimate)
+  estimateAmount={canEstimate
+    ? (estimate) => estimateActivityMinutes(pending.title, pending.description, estimate)
     : undefined}
   onconfirm={confirm}
 />

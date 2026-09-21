@@ -3,8 +3,7 @@
   import { addMeal } from '$src/state/log';
   import { unboundMeals, saveUnboundMeal, touchUnboundMeal, removeUnboundMeal } from '$src/state/library';
   import { mealCalories, mealMacros } from '$src/domain/energy';
-  import { createLlm } from '$src/adapters/llm';
-  import { llmConfig } from '$src/state/settings';
+  import { canEstimate, estimateMealGrams } from '$src/adapters/jev';
   import type { UnboundMeal } from '$src/domain/types';
   import { formatMacrosCompact } from '$lib/format';
   import Button from '$lib/components/ui/Button.svelte';
@@ -12,7 +11,6 @@
   import MealForm from '$src/views/add/MealForm.svelte';
   import AmountDialog from '$src/views/add/AmountDialog.svelte';
 
-  const llm = $derived(createLlm($llmConfig.openrouterApiKey));
   let showForm = $state(false);
   let formTitle = $state('');
   let dialogOpen = $state(false);
@@ -90,8 +88,8 @@
   unit="g"
   initialAmount={pendingGrams}
   kcalPreview={(grams) => mealCalories(pending.macrosPer100g, grams)}
-  estimateAmount={$llmConfig.openrouterApiKey
-    ? (estimate) => llm.estimateMealGrams(pending.title, pending.description, estimate)
+  estimateAmount={canEstimate
+    ? (estimate) => estimateMealGrams(pending.title, pending.description, estimate)
     : undefined}
   onconfirm={confirm}
 />
