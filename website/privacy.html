@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Privacy Policy - Calcifer</title>
-  <meta name="description" content="Calcifer's privacy policy. Learn what data Calcifer stores and how AI prompts are handled." />
+  <meta name="description" content="Calcifer's privacy policy. Learn what data Calcifer stores and how AI estimate requests are handled." />
   <link rel="icon" type="image/png" href="icon.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,22 +31,22 @@
     <div class="container policy-container">
       <div class="badge">Privacy first</div>
       <h1 class="policy-title">Privacy Policy</h1>
-      <p class="policy-updated">Last updated: August 19, 2026</p>
+      <p class="policy-updated">Last updated: September 30, 2026</p>
 
       <div class="policy-intro">
-        <p>Calcifer is designed to keep your nutrition data on your device. We do not require an account and we do not run a service that collects personal profiles, email addresses, or analytics about how you use the app.</p>
+        <p>Calcifer is designed to keep your nutrition data on your device. We do not require an account and we do not collect personal profiles, email addresses, or analytics about how you use the app. The exception is AI estimation, which sends the meal or workout you want estimated to our API.</p>
       </div>
 
       <section class="policy-section">
         <h2>What data Calcifer stores</h2>
         <p>Calcifer stores the workouts and meals you enter, along with the calorie, macro, duration, and goal information needed to provide the app's tracking features. This information is stored locally on your device.</p>
-        <p>Your OpenRouter API key is also stored locally on your device so Calcifer can make AI requests on your behalf. Calcifer does not send your API key to Calcifer-operated servers.</p>
       </section>
 
       <section class="policy-section">
-        <h2>AI requests and OpenRouter</h2>
-        <p>When you use AI-powered meal or workout estimation, Calcifer sends your prompt to <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer">OpenRouter</a> using your own API key. The prompt may include the meal or workout description you entered so the AI can estimate nutritional information.</p>
-        <p>These requests go directly from the app to OpenRouter. OpenRouter processes them under its own terms and privacy policy. Please review OpenRouter's policies to understand how it handles requests, including any retention or model-provider practices that may apply.</p>
+        <h2>AI estimate requests</h2>
+        <p>When you use AI-powered meal or workout estimation, Calcifer sends the title and description of that single meal or workout to the Calcifer API. It sends nothing else from your log, goals, or history.</p>
+        <p>The Calcifer API forwards that text to <a href="https://typesafe.ai" target="_blank" rel="noopener noreferrer">TypeSafe</a>. TypeSafe's AI model produces the estimate, and the Calcifer API returns it to the app. TypeSafe processes these requests under its own terms and privacy policy.</p>
+        <p>The Calcifer API does not store or log the meals and workouts it receives. It briefly keeps your IP address in memory to enforce rate limits, and discards it once those limits reset.</p>
       </section>
 
       <section class="policy-section">
@@ -55,13 +55,13 @@
           <li>No name, email address, or account information</li>
           <li>No location, contacts, photos, or device identifiers</li>
           <li>No advertising profiles or usage analytics</li>
-          <li>No workouts or meals on Calcifer-operated servers</li>
+          <li>No stored workouts or meals on Calcifer-operated servers</li>
         </ul>
       </section>
 
       <section class="policy-section">
         <h2>Your choices</h2>
-        <p>You can edit or delete your meals and workouts within the app. You can also remove Calcifer's locally stored data by clearing the app's data or uninstalling the app. You control your OpenRouter API key and can revoke it through OpenRouter.</p>
+        <p>You can edit or delete your meals and workouts within the app. You can also remove Calcifer's locally stored data by clearing the app's data or uninstalling the app. You can avoid sending anything to the Calcifer API by entering calories and macros manually instead of using AI estimation.</p>
       </section>
 
       <section class="policy-section">
